@@ -6,7 +6,7 @@ import { BookController } from './book.controller';
 const router = express.Router();
 
 
-router.post(
+router.patch(
   '/add-book',
   validateRequest(BookValidation.createBookZodSchema),
   BookController.addBook
