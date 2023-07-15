@@ -11,6 +11,17 @@ router.patch(
   validateRequest(BookValidation.createBookZodSchema),
   BookController.addBook
 );
+router.get(
+    '/:id',
+    BookController.getSingleBook
+  );
+
+router.post(
+  '/create-comment/:id',
+  validateRequest(BookValidation.createCommentZodSchema),
+  BookController.addComment
+);
+
 
 
 export const BookRoutes = router;

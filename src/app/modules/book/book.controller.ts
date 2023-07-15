@@ -15,10 +15,33 @@ const addBook = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+const addComment = catchAsync(async (req: Request, res: Response) => {
+  const { ...commentData } = req.body;
+  const result = await BookService.addComment(req.params.id, commentData);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Comment post successfully',
+    data: result,
+  });
+});
+const getSingleBook = catchAsync(async (req: Request, res: Response) => {
+  const result = await BookService.getSingleBook(req.params.id);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Book retrieved successfully',
+    data: result,
+  });
+});
 
 
 
 
 export const BookController = {
     addBook,
+    addComment,
+    getSingleBook
 };
