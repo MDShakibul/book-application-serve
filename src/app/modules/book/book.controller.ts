@@ -15,6 +15,7 @@ const addBook = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
 const updateBook = catchAsync(async (req: Request, res: Response) => {
   const { ...data } = req.body;
   const result = await BookService.updateBook(req.params.id, data);
@@ -26,6 +27,7 @@ const updateBook = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
 const addComment = catchAsync(async (req: Request, res: Response) => {
   const { ...commentData } = req.body;
   const result = await BookService.addComment(req.params.id, commentData);
@@ -37,6 +39,7 @@ const addComment = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
 const getSingleBook = catchAsync(async (req: Request, res: Response) => {
   const result = await BookService.getSingleBook(req.params.id);
 
@@ -47,6 +50,7 @@ const getSingleBook = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
 const deleteBook = catchAsync(async (req: Request, res: Response) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const result = await BookService.deleteBook(req.params.id);
