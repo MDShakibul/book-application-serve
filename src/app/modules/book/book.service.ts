@@ -116,7 +116,7 @@ const getAllBooks = async (
     .sort(sortCondition)
     .skip(skip)
     .limit(limit);
-  const count = await Book.countDocuments(whereCondition);
+  const count = await Book.countDocuments();
 
   return {
     meta: {
