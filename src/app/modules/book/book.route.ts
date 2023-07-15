@@ -5,27 +5,24 @@ import { BookController } from './book.controller';
 
 const router = express.Router();
 
-
 router.patch(
   '/add-book',
   validateRequest(BookValidation.createBookZodSchema),
   BookController.addBook
 );
-router.get(
-    '/:id',
-    BookController.getSingleBook
-  );
-router.delete(
-    '/:id',
-    BookController.deleteBook
-  );
+
+router.patch(
+  '/:id',
+  validateRequest(BookValidation.updateBookZodSchema),
+  BookController.updateBook
+);
+router.get('/:id', BookController.getSingleBook);
+router.delete('/:id', BookController.deleteBook);
 
 router.post(
   '/create-comment/:id',
   validateRequest(BookValidation.createCommentZodSchema),
   BookController.addComment
 );
-
-
 
 export const BookRoutes = router;
