@@ -36,6 +36,17 @@ const getSingleBook = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+const deleteBook = catchAsync(async (req: Request, res: Response) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const result = await BookService.deleteBook(req.params.id);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Book delete successfully',
+    data: null,
+  });
+});
 
 
 
@@ -43,5 +54,6 @@ const getSingleBook = catchAsync(async (req: Request, res: Response) => {
 export const BookController = {
     addBook,
     addComment,
-    getSingleBook
+    getSingleBook,
+    deleteBook
 };

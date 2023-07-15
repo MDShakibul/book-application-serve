@@ -15,6 +15,10 @@ router.get(
     '/:id',
     BookController.getSingleBook
   );
+router.delete(
+    '/:id',
+    BookController.deleteBook
+  );
 
 router.post(
   '/create-comment/:id',

@@ -33,9 +33,19 @@ const getSingleBook = async (
   }
   return book;
 };
+const deleteBook = async (
+  bookId: string): Promise<IBook | null | undefined> => {
+  const book = await Book.findByIdAndDelete(bookId);
+
+  if (!book) {
+    throw new ApiError(404, 'Book not found');
+  }
+  return book;
+};
 
 export const BookService = {
   addBook,
   addComment,
-  getSingleBook
+  getSingleBook,
+  deleteBook
 };
