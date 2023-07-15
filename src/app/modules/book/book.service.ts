@@ -15,8 +15,14 @@ const addBook = async (payload: IBook): Promise<Partial<IBook> | null> => {
 
 const updateBook = async (
   id: string,
+  userId: string,
   payload: Partial<IBook>
 ): Promise<IBook | null | undefined> => {
+  const book = await Book.findById(id);
+  if(book && book.addBy.toString() !== userId){
+    throw new ApiError(403, 'You are not owner of this book')
+  }
+
   const result = await Book.findByIdAndUpdate({ _id: id }, payload, {
     new: true,
   });
@@ -52,14 +58,21 @@ const getSingleBook = async (
   return book;
 };
 const deleteBook = async (
-  bookId: string
+  bookId: string,
+  userId: string
 ): Promise<IBook | null | undefined> => {
-  const book = await Book.findByIdAndDelete(bookId);
 
-  if (!book) {
+  const book = await Book.findById(bookId);
+  if(book && book.addBy.toString() !== userId){
+    throw new ApiError(403, 'You are not owner of this book')
+  }
+
+  const deleteBook = await Book.findByIdAndDelete(bookId);
+
+  if (!deleteBook) {
     throw new ApiError(404, 'Book not found');
   }
-  return book;
+  return deleteBook; 
 };
 
 const getAllBooks = async (

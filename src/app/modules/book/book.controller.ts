@@ -7,9 +7,11 @@ import pick from '../../../shared/pick';
 import { bookFilterableFields } from './book.constant';
 import { paginationFields } from '../../../constants/pagination';
 import { IBook } from './book.interface';
+import { IResUser } from '../../../interfaces/resuser';
 
 const addBook = catchAsync(async (req: Request, res: Response) => {
   const { ...bookData } = req.body;
+
   const result = await BookService.addBook(bookData);
 
   sendResponse(res, {
@@ -22,7 +24,8 @@ const addBook = catchAsync(async (req: Request, res: Response) => {
 
 const updateBook = catchAsync(async (req: Request, res: Response) => {
   const { ...data } = req.body;
-  const result = await BookService.updateBook(req.params.id, data);
+  const { _id: userId, ...userInfo } = req.user as IResUser;
+  const result = await BookService.updateBook(req.params.id,userId, data);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -45,6 +48,7 @@ const addComment = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getSingleBook = catchAsync(async (req: Request, res: Response) => {
+
   const result = await BookService.getSingleBook(req.params.id);
 
   sendResponse(res, {
@@ -57,7 +61,8 @@ const getSingleBook = catchAsync(async (req: Request, res: Response) => {
 
 const deleteBook = catchAsync(async (req: Request, res: Response) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const result = await BookService.deleteBook(req.params.id);
+  const { _id: userId, ...userInfo } = req.user as IResUser;
+  const result = await BookService.deleteBook(req.params.id, userId) ;
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

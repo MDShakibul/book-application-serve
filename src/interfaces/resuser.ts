@@ -1,7 +1,6 @@
 export type IResUser =  {
     _id: string;
-    role: string;
-    userPhoneNumber: string;
+    email: string;
     iat: number;
     exp: number;
   }
