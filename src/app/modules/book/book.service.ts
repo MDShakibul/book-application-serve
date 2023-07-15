@@ -84,6 +84,16 @@ const getAllBooks = async (
     });
   }
 
+  if (publicationYear && isValid(new Date(publicationYear))) {
+    const publicationYearStartDate = startOfYear(new Date(publicationYear));
+    const publicationYearEndDate = endOfYear(new Date(publicationYear));
+    andCondition.push({
+      publicationDate: {
+        $gte: publicationYearStartDate,
+        $lte: publicationYearEndDate,
+      },
+    });
+  }
 
 
 
