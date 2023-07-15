@@ -86,6 +86,15 @@ const getAllBooks = async (
 
 
 
+
+  if (Object.keys(filtersData).length) {
+    andCondition.push({
+      $and: Object.entries(filtersData).map(([field, value]) => ({
+        [field]: value,
+      })),
+    });
+  }
+
   const sortCondition: { [key: string]: SortOrder } = {};
 
   if (sortBy && sortOrder) {
