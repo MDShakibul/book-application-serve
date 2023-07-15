@@ -24,5 +24,6 @@ router.post(
   validateRequest(BookValidation.createCommentZodSchema),
   BookController.addComment
 );
+router.get('/', BookController.getAllBook);
 
 export const BookRoutes = router;
