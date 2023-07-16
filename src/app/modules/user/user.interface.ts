@@ -14,6 +14,9 @@ export type IUserResponse = {
   password?: string;
   wishList?: string[];
   continueList?: string[];
+  accessToken: string;
+  refreshToken?: string;
+
 };
 
 

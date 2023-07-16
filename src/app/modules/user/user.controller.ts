@@ -7,17 +7,29 @@ import config from '../../../config';
 import {
   ILoginUserResponse,
   IRefreshTokenResponse,
+  IUserResponse,
 } from './user.interface';
 
 const createUser = catchAsync(async (req: Request, res: Response) => {
   const { ...userData } = req.body;
   const result = await UserService.createUser(userData);
 
-  sendResponse(res, {
+    const { refreshToken, password, ...others } = result;
+  
+  //set refreshToken set in cookies
+
+  const cookieOption = {
+    secure: config.env === 'production',
+    httpOnly: true,
+  };
+
+  res.cookie('refreshToken', refreshToken, cookieOption);
+
+  sendResponse<IUserResponse >(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'User created successfully',
-    data: result,
+    data: others,
   });
 });
 
