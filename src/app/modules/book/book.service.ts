@@ -161,9 +161,9 @@ const setWishList = async (
   if (!user) {
     throw new ApiError(404, 'User not found');
   }
-  const bookIndex = user?.wishList?.findIndex((book) => book.book_id === bookId);
+  //const bookIndex = user?.wishList?.findIndex((book) => book.book_id === bookId);
 
-  if (bookIndex !== undefined && bookIndex !== -1) {
+/*   if (bookIndex !== undefined && bookIndex !== -1) {
     throw new ApiError(401, 'This book already in your wish list');
   } else {
     const book = await Book.findById(bookId);
@@ -174,7 +174,7 @@ const setWishList = async (
         { $push: { wishList: { book_name: book.title } } }
       );
     }
-  }
+  } */
 
 };
 const getWishList = async (
