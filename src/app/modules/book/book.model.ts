@@ -14,9 +14,10 @@ const BookSchema = new Schema<IBook>(
         createdAt: { type: String, required: true },
       },
     ],
-    addBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    addBy: { type: Schema.Types.ObjectId  , ref: 'User', required: true },
     finishedBy: { type: [String], required: true },
     isComplete: { type: Boolean, default: false },
+    isOwner: { type: Boolean, default: false },
   },
   {
     timestamps: true,

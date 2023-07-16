@@ -1,6 +1,6 @@
 export type IResUser =  {
     _id: string;
-    email: string;
+    userEmailNumber: string;
     iat: number;
     exp: number;
   }

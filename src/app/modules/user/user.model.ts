@@ -7,8 +7,8 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>(
   {
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true, select: false },
-    wishList: { type: [String],},
-    continueList: { type: [String] },
+    wishList: [{ book_id: { type: String } }],
+    continueList: [{ book_id: { type: String } }],
   },
   {
     timestamps: true,

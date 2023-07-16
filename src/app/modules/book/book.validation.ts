@@ -8,7 +8,6 @@ const createBookZodSchema = z.object({
     publicationDate: z.string({
       required_error: 'Publication Date is required',
     }),
-    addBy: z.string({ required_error: 'User is required' }),
   }),
 });
 const createCommentZodSchema = z.object({
@@ -16,11 +15,6 @@ const createCommentZodSchema = z.object({
     body: z.string({
       required_error: 'Comment is required',
     }),
-    userEmail: z
-      .string({
-        required_error: 'Email is required',
-      })
-      .email(),
   }),
 });
 
@@ -32,7 +26,6 @@ const updateBookZodSchema = z.object({
     publicationDate: z.string({
       required_error: 'Publication Date is required',
     }).optional(),
-    addBy: z.string({ required_error: 'User is required' }).optional(),
   }),
 });
 

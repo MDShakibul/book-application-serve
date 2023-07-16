@@ -13,6 +13,7 @@ const auth = () => async (req: Request, res: Response, next: NextFunction) => {
       throw new ApiError(httpStatus.UNAUTHORIZED, 'Your are not authorized');
     }
 
+
     //verify token
     let verifiedUser = null;
     verifiedUser = jwtHelpers.verifyToken(token, config.jwt.secret as Secret);

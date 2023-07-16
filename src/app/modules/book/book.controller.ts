@@ -11,8 +11,9 @@ import { IResUser } from '../../../interfaces/resuser';
 
 const addBook = catchAsync(async (req: Request, res: Response) => {
   const { ...bookData } = req.body;
+  const { _id: userId, ...userInfo } = req.user as IResUser;
 
-  const result = await BookService.addBook(bookData);
+  const result = await BookService.addBook(bookData, userId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -37,7 +38,8 @@ const updateBook = catchAsync(async (req: Request, res: Response) => {
 
 const addComment = catchAsync(async (req: Request, res: Response) => {
   const { ...commentData } = req.body;
-  const result = await BookService.addComment(req.params.id, commentData);
+  const { _id: userId, iat,exp,userEmailNumber } = req.user as IResUser;
+  const result = await BookService.addComment(req.params.id, commentData, userEmailNumber);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -48,8 +50,8 @@ const addComment = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getSingleBook = catchAsync(async (req: Request, res: Response) => {
-
-  const result = await BookService.getSingleBook(req.params.id);
+  const { _id: userId, ...userInfo } = req.user as IResUser;
+  const result = await BookService.getSingleBook(req.params.id, userId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -81,11 +83,36 @@ const getAllBook = catchAsync(async (req: Request, res: Response) => {
   sendResponse<IBook[]>(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Cows retrieved successfully',
+    message: 'Books retrieved successfully',
     meta: result.meta,
     data: result.data,
   });
 });
+
+const setWishList = catchAsync(async (req: Request, res: Response) => {
+  const { _id: userId, ...userInfo } = req.user as IResUser;
+  const result = await BookService.setWishList(req.params.id, userId) ;
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Add Wish List successfully',
+    data: result,
+  });
+});
+const getWishList = catchAsync(async (req: Request, res: Response) => {
+  const { _id: userId, ...userInfo } = req.user as IResUser;
+  const result = await BookService.getWishList(userId) ;
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Add Wish List successfully',
+    data: result,
+  });
+});
+
+
 
 export const BookController = {
   addBook,
@@ -93,5 +120,7 @@ export const BookController = {
   getSingleBook,
   deleteBook,
   updateBook,
-  getAllBook
+  getAllBook,
+  setWishList,
+  getWishList,
 };

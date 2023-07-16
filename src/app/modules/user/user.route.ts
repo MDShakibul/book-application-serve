@@ -18,7 +18,7 @@ router.post(
   validateRequest(UserValidation.logUserZodSchema),
   UserController.loginUser
 );
-router.get(
+router.post(
   '/logout',
   auth(),
   UserController.logoutUser

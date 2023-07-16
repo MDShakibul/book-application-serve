@@ -7,9 +7,16 @@ import { bookSearchableFields } from './book.constant';
 import { IBook, IBookFilters, Review } from './book.interface';
 import { Book } from './book.model';
 import { isValid, isDate, startOfYear, endOfYear } from 'date-fns';
+import { User } from '../user/user.model';
+import { IUser } from '../user/user.interface';
 
-const addBook = async (payload: IBook): Promise<Partial<IBook> | null> => {
+const addBook = async (
+  payload: IBook,
+  userId: string
+): Promise<Partial<IBook> | null> => {
+  payload.addBy = userId;
   const result = await Book.create(payload);
+
   return result;
 };
 
@@ -19,8 +26,8 @@ const updateBook = async (
   payload: Partial<IBook>
 ): Promise<IBook | null | undefined> => {
   const book = await Book.findById(id);
-  if(book && book.addBy.toString() !== userId){
-    throw new ApiError(403, 'You are not owner of this book')
+  if (book && book.addBy.toString() !== userId) {
+    throw new ApiError(403, 'You are not owner of this book');
   }
 
   const result = await Book.findByIdAndUpdate({ _id: id }, payload, {
@@ -31,7 +38,8 @@ const updateBook = async (
 
 const addComment = async (
   bookId: string,
-  payload: Review
+  payload: Review,
+  email: string
 ): Promise<Partial<IBook> | null | undefined> => {
   const book = await Book.findById(bookId);
 
@@ -41,30 +49,35 @@ const addComment = async (
 
   book?.review?.unshift({
     body: payload.body,
-    userEmail: payload.userEmail,
+    userEmail: email,
     createdAt: new Date().toISOString(),
   });
   await book.save();
   return book;
 };
+
 const getSingleBook = async (
-  bookId: string
+  bookId: string,
+  userId: string
 ): Promise<IBook | null | undefined> => {
   const book = await Book.findById(bookId);
 
+  if (book && book.addBy.toString() === userId) {
+    book.isOwner = true;
+  }
   if (!book) {
     throw new ApiError(404, 'Book not found');
   }
   return book;
 };
+
 const deleteBook = async (
   bookId: string,
   userId: string
 ): Promise<IBook | null | undefined> => {
-
   const book = await Book.findById(bookId);
-  if(book && book.addBy.toString() !== userId){
-    throw new ApiError(403, 'You are not owner of this book')
+  if (book && book.addBy.toString() !== userId) {
+    throw new ApiError(403, 'You are not owner of this book');
   }
 
   const deleteBook = await Book.findByIdAndDelete(bookId);
@@ -72,7 +85,7 @@ const deleteBook = async (
   if (!deleteBook) {
     throw new ApiError(404, 'Book not found');
   }
-  return deleteBook; 
+  return deleteBook;
 };
 
 const getAllBooks = async (
@@ -108,8 +121,6 @@ const getAllBooks = async (
     });
   }
 
-
-
   if (Object.keys(filtersData).length) {
     andCondition.push({
       $and: Object.entries(filtersData).map(([field, value]) => ({
@@ -126,7 +137,7 @@ const getAllBooks = async (
   const whereCondition = andCondition.length > 0 ? { $and: andCondition } : {};
   const result = await Book.find(whereCondition)
     .populate('addBy')
-    .sort(sortCondition)
+    .sort({ createdAt: -1 })
     .skip(skip)
     .limit(limit);
   const count = await Book.countDocuments(whereCondition);
@@ -141,6 +152,40 @@ const getAllBooks = async (
   };
 };
 
+const setWishList = async (
+  bookId: string,
+  userId: string
+): Promise<IUser | null| undefined | any > => {
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new ApiError(404, 'User not found');
+  }
+  const bookIndex = user?.wishList?.findIndex((book) => book.book_id === bookId);
+
+  if (bookIndex !== undefined && bookIndex !== -1) {
+    throw new ApiError(401, 'This book already in your wish list');
+  } else {
+    const book = await Book.findById(bookId);
+    if (book) {
+      console.log(book.title);
+      await User.updateOne(
+        { _id: userId },
+        { $push: { wishList: { book_name: book.title } } }
+      );
+    }
+  }
+
+};
+const getWishList = async (
+  userId: string
+): Promise<IUser | null| undefined | any > => {
+  const user = await User.findById(userId);
+
+  return user
+
+};
+
 
 export const BookService = {
   addBook,
@@ -148,5 +193,7 @@ export const BookService = {
   getSingleBook,
   deleteBook,
   updateBook,
-  getAllBooks
+  getAllBooks,
+  setWishList,
+  getWishList,
 };

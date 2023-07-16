@@ -9,11 +9,15 @@ export type IUser = {
   continueList?: string[];
 };
 
+export type WishList = {
+  bookName: string
+};
+
 export type IUserResponse = {
   email: string;
   password?: string;
-  wishList?: string[];
-  continueList?: string[];
+  wishList?: WishList[]; 
+  continueList?: WishList[];
   accessToken: string;
   refreshToken?: string;
 
