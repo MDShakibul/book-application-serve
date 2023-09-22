@@ -10,7 +10,9 @@ export type IUser = {
 };
 
 export type WishList = {
-  bookName: string
+  book_id: string,
+  bookName: string,
+  author: string
 };
 
 export type IUserResponse = {

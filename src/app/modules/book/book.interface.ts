@@ -7,6 +7,9 @@ export type Review = {
     createdAt: string;
   };
 
+  export type FinishedBy = {
+    user_id: string,
+  };
 export type IBook = {
   title: string;
   author: string;
@@ -14,7 +17,7 @@ export type IBook = {
   publicationDate: Date;
   review?: Review[];
   addBy: string | ObjectId;
-  finishedBy?: string[];
+  finishedBy?: FinishedBy[];
   isComplete: false | true;
   isOwner: false | true;
 };

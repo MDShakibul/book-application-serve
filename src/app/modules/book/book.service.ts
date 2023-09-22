@@ -61,6 +61,12 @@ const getSingleBook = async (
   userId: string
 ): Promise<IBook | null | undefined> => {
   const book = await Book.findById(bookId);
+  const userIndex = book?.finishedBy?.findIndex((user) => user.user_id === userId);
+
+  if (book && userIndex !== undefined && userIndex !== -1) {
+    book.isComplete = true
+  }
+
 
   if (book && book.addBy.toString() === userId) {
     book.isOwner = true;
@@ -161,20 +167,44 @@ const setWishList = async (
   if (!user) {
     throw new ApiError(404, 'User not found');
   }
-  //const bookIndex = user?.wishList?.findIndex((book) => book.book_id === bookId);
+  const bookIndex = user?.wishList?.findIndex((book) => book.book_id === bookId);
 
-/*   if (bookIndex !== undefined && bookIndex !== -1) {
+  if (bookIndex !== undefined && bookIndex !== -1) {
     throw new ApiError(401, 'This book already in your wish list');
   } else {
     const book = await Book.findById(bookId);
     if (book) {
-      console.log(book.title);
       await User.updateOne(
         { _id: userId },
-        { $push: { wishList: { book_name: book.title } } }
+        { $push: { wishList: { book_id:bookId,  book_name: book.title, author: book.author } } }
       );
     }
-  } */
+  }
+
+};
+
+const setRunningList = async (
+  bookId: string,
+  userId: string
+): Promise<IUser | null| undefined | any > => {
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new ApiError(404, 'User not found');
+  }
+  const bookIndex = user?.continueList?.findIndex((book) => book.book_id === bookId);
+
+  if (bookIndex !== undefined && bookIndex !== -1) {
+    throw new ApiError(401, 'This book already in your Continure list');
+  } else {
+    const book = await Book.findById(bookId);
+    if (book) {
+      await User.updateOne(
+        { _id: userId },
+        { $push: { continueList: { book_id:bookId,  book_name: book.title, author: book.author } } }
+      );
+    }
+  }
 
 };
 const getWishList = async (
@@ -186,6 +216,24 @@ const getWishList = async (
 
 };
 
+const completed = async (
+  bookId: string,
+  userId: string
+): Promise<IUser | null| undefined | any > => {
+  const book = await Book.findById(bookId);
+  const userIndex = book?.finishedBy?.findIndex((user) => user.user_id === userId);
+  if (book && userIndex !== undefined && userIndex !== -1) {
+    throw new ApiError(401, "Already completed");
+  } else{
+    await Book.updateOne(
+      { _id: bookId },
+      { $push: { finishedBy: { user_id:userId} } }
+    );
+  
+  }
+  
+};
+
 
 export const BookService = {
   addBook,
@@ -195,5 +243,7 @@ export const BookService = {
   updateBook,
   getAllBooks,
   setWishList,
+  setRunningList,
   getWishList,
+  completed
 };

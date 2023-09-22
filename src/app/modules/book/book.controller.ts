@@ -100,6 +100,19 @@ const setWishList = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
+const setRunningList = catchAsync(async (req: Request, res: Response) => {
+  const { _id: userId, ...userInfo } = req.user as IResUser;
+  const result = await BookService.setRunningList(req.params.id, userId) ;
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Add Wish List successfully',
+    data: result,
+  });
+});
+
 const getWishList = catchAsync(async (req: Request, res: Response) => {
   const { _id: userId, ...userInfo } = req.user as IResUser;
   const result = await BookService.getWishList(userId) ;
@@ -108,6 +121,17 @@ const getWishList = catchAsync(async (req: Request, res: Response) => {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Add Wish List successfully',
+    data: result,
+  });
+});
+const completed = catchAsync(async (req: Request, res: Response) => {
+  const { _id: userId, ...userInfo } = req.user as IResUser;
+  const result = await BookService.completed(req.params.id, userId) ;
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Wow you complete this book',
     data: result,
   });
 });
@@ -122,5 +146,7 @@ export const BookController = {
   updateBook,
   getAllBook,
   setWishList,
+  setRunningList,
   getWishList,
+  completed
 };

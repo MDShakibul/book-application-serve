@@ -20,6 +20,8 @@ router.patch(
   BookController.updateBook
 );
 router.post('/add-wish-list/:id', auth(), BookController.setWishList);
+router.post('/add-continue-list/:id', auth(), BookController.setRunningList);
+
 router.get('/get-wish-list', auth(), BookController.getWishList);
 router.get('/:id', auth(), BookController.getSingleBook);
 router.delete('/:id', auth(), BookController.deleteBook);
@@ -30,6 +32,7 @@ router.post(
   auth(),
   BookController.addComment
 );
+router.post('/completed/:id', auth(), BookController.completed);
 router.get('/', BookController.getAllBook);
 
 export const BookRoutes = router;
